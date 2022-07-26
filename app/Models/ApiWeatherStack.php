@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Http;
 
-class ApiWeather
+class ApiWeatherStack
 {
     private $httpClient;
 
@@ -24,6 +24,6 @@ class ApiWeather
             'query'      => $city
         ];
 
-        return $this->httpClient->get('current',$aSend)->object();
+        return $this->httpClient->get('current',$aSend)->json('current');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ApiKey;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -9,9 +10,8 @@ class AccessCheck
 {
     public function handle(Request $request, Closure $next)
     {
-        $apiKey = trim($request->api_key);
-        if (!$apiKey) return response()->json(['Unauthorized'],401);
-        if ($apiKey != config('security.api_key')) return response()->json(['invalid api key'],401);
+        $apiKey = ApiKey::whereRaw("BINARY `api_key`= ?",[$request->api_key])->first();
+        if (!$apiKey) return response()->json(['error' => config('errors_messages.invalid_api_key')],401);
         return $next($request);
     }
 }
